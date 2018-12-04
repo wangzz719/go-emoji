@@ -27,9 +27,10 @@ replased := parser.ReplaceAllStringFunc(text, func(s string) string {
 parser := NewEmojiParser()
 var text = "a #💩 #and #🍦 #😳"
 var i = -1
-replased := parser.ToHtmlEntities(text)
+replased := parser.ToHtmlEntities(text, "%X)
 // replased == "a #&#x1F4A9; #and #&#x1F366; #&#x1F633;"
 ```
+for different type of fmt see: https://golang.org/pkg/fmt/
 
 #### To HTML-Images
 
