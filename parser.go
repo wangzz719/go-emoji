@@ -3,6 +3,7 @@
 package emoji
 
 import (
+	"code.byted.org/gopkg/pkg/errors"
 	"fmt"
 	"regexp"
 	"unicode/utf8"
@@ -26,12 +27,21 @@ func NewEmojiParser() *emojiParser {
 	return &emojiParser{rx}
 }
 
-func (p *emojiParser) ToHtmlEntities(str string, format string) string {
+func (p *emojiParser) ToHtmlEntities(str string, format string) (string, error) {
+	var htmlFormat string
+	switch format {
+	case "%x", "%X":
+		htmlFormat = fmt.Sprintf("&#x%s;", format)
+	case "%d":
+		htmlFormat = fmt.Sprintf("&#%s;", format)
+	default:
+		return "", errors.New("unsupported error: " + format)
+	}
+
 	return p.ReplaceAllStringFunc(str, func(s string) string {
 		r, _ := utf8.DecodeRuneInString(s)
-		htmlFormat := fmt.Sprintf("&#x%s;", format)
 		return fmt.Sprintf(htmlFormat, r)
-	})
+	}), nil
 }
 
 func (p *emojiParser) ToHtmlImages(str string) string {
