@@ -3,8 +3,8 @@
 package emoji
 
 import (
-	"regexp"
 	"fmt"
+	"regexp"
 	"unicode/utf8"
 )
 
@@ -22,15 +22,15 @@ type emojiParser struct {
 	*regexp.Regexp
 }
 
-func NewEmojiParser() *emojiParser{
+func NewEmojiParser() *emojiParser {
 	return &emojiParser{rx}
 }
 
-func (p *emojiParser) ToHtmlEntities(str string) string {
+func (p *emojiParser) ToHtmlEntities(str string, format string) string {
 	return p.ReplaceAllStringFunc(str, func(s string) string {
 		r, _ := utf8.DecodeRuneInString(s)
-		html := fmt.Sprintf(`&#x%X;`, r)
-		return html
+		htmlFormat := fmt.Sprintf("&#x%s;", format)
+		return fmt.Sprintf(htmlFormat, r)
 	})
 }
 
@@ -41,5 +41,3 @@ func (p *emojiParser) ToHtmlImages(str string) string {
 		return html
 	})
 }
-
-
