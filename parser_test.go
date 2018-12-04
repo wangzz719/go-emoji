@@ -4,28 +4,29 @@ package emoji
 
 import (
 	"testing"
+
 	"github.com/stretchr/testify/assert"
 
-	"strconv"
 	"regexp"
+	"strconv"
 )
 
 func TestInsert(t *testing.T) {
-	container  := make(map[string]string)
+	container := make(map[string]string)
 	parser := NewEmojiParser()
 
 	var text = "a #💩 #and #🍦 #😳"
 	var i = -1
 	replased := parser.ReplaceAllStringFunc(text, func(s string) string {
 		i++
-		key := "_$"+strconv.Itoa(i)+"_"
+		key := "_$" + strconv.Itoa(i) + "_"
 		container[key] = s
 		return key
 		return strconv.Itoa(i)
 	})
 	assert.Equal(t, replased, "a #_$0_ #and #_$1_ #_$2_")
 
-	htmlEnt := parser.ToHtmlEntities(text)
+	htmlEnt := parser.ToHtmlEntities(text, "%X")
 
 	assert.Equal(t, htmlEnt, "a #&#x1F4A9; #and #&#x1F366; #&#x1F633;")
 
